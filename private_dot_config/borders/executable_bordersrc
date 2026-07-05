@@ -1,0 +1,10 @@
+#!/bin/bash
+# Config de JankyBorders (independiente de AeroSpace).
+# Marca la ventana activa con un borde blanco redondeado.
+options=(
+	active_color=0xffffffff
+	inactive_color=0x00000000
+	width=8.0
+	style=round
+)
+borders "${options[@]}"

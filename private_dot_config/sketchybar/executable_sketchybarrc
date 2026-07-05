@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# SketchyBar — pills + iconos de apps, integrada con AeroSpace.
+CONFIG_DIR="$HOME/.config/sketchybar"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+export PATH="/opt/homebrew/bin:$PATH"
+
+# Paleta (Catppuccin Mocha)
+BAR=0xf01e1e2e
+PILL=0xff313244
+TXT=0xffcdd6f4
+ACCENT=0xfff5e0dc
+
+# Glyphs Nerd Font (generados con python para evitar problemas de codificacion)
+g(){ python3 -c "import sys;print(chr(int(sys.argv[1],16)),end='')" "$1"; }
+I_APPLE="$(g f179)"; I_CPU="$(g f2db)"; I_RAM="$(g f035b)"
+I_VOL="$(g f028)"; I_BAT="$(g f240)"; I_CLK="$(g f017)"
+I_MUS="$(g f001)"; I_PREV="$(g f04a)"; I_NEXT="$(g f04e)"; I_RESIZE="$(g f0b2)"
+
+##### Barra #####
+sketchybar --bar height=36 position=top color=$BAR \
+                 padding_left=8 padding_right=8 blur_radius=25 shadow=on
+
+##### Estilos por defecto (pills redondeadas) #####
+sketchybar --default icon.font="Hack Nerd Font:Bold:14.0" icon.color=$TXT \
+                     label.font="Hack Nerd Font:Semibold:13.0" label.color=$TXT \
+                     background.color=$PILL background.corner_radius=9 background.height=26 \
+                     padding_left=4 padding_right=4 \
+                     icon.padding_left=8 icon.padding_right=4 \
+                     label.padding_left=2 label.padding_right=8
+
+##### Apple #####
+sketchybar --add item apple left \
+           --set apple icon="$I_APPLE" icon.font="Hack Nerd Font:Bold:16.0" \
+                 label.drawing=off icon.padding_left=10 icon.padding_right=10 \
+                 background.drawing=off \
+                 click_script="open -b com.apple.systempreferences"
+
+##### Indicador de modo RESIZE (se enciende con ctrl-alt-r, se apaga con Esc) #####
+sketchybar --add item mode left \
+           --set mode drawing=off icon="$I_RESIZE" label="RESIZE" \
+                 label.font="Hack Nerd Font:Bold:12.0" \
+                 icon.color=0xff1e1e2e label.color=0xff1e1e2e \
+                 background.color=0xfff9e2af background.drawing=on
+
+##### Workspaces (con iconos de apps) #####
+for sid in 1 2 3 4; do
+  sketchybar --add item space.$sid left \
+             --set space.$sid icon="$sid" icon.font="Hack Nerd Font:Bold:14.0" \
+                   label.font="sketchybar-app-font:Regular:16.0" \
+                   background.drawing=off \
+                   script="$PLUGIN_DIR/aerospace.sh" \
+             --subscribe space.$sid aerospace_workspace_change front_app_switched
+done
+
+##### App enfocada #####
+sketchybar --add item front_app left \
+           --set front_app icon.font="sketchybar-app-font:Regular:16.0" \
+                 label.font="Hack Nerd Font:Bold:13.0" \
+                 script="$PLUGIN_DIR/front_app.sh" \
+           --subscribe front_app front_app_switched
+
+##### Reloj (pill propio, mas a la derecha) — clic abre Calendario #####
+sketchybar --add item clock right \
+           --set clock icon="$I_CLK" label.font="Hack Nerd Font:Bold:15.0" \
+                 update_freq=10 script="$PLUGIN_DIR/clock.sh" \
+                 click_script="open -a Calendar" \
+           --subscribe clock system_woke
+
+##### Stats (se agrupan luego en un bracket): cpu, ram, volumen, bateria #####
+sketchybar --add item battery right \
+           --set battery icon="$I_BAT" update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+           --subscribe battery power_source_change system_woke
+sketchybar --add item volume right \
+           --set volume icon="$I_VOL" script="$PLUGIN_DIR/volume.sh" \
+           --subscribe volume volume_change mouse.scrolled mouse.clicked
+sketchybar --add item memory right \
+           --set memory icon="$I_RAM" update_freq=10 script="$PLUGIN_DIR/memory.sh" \
+           --subscribe memory system_woke
+sketchybar --add item cpu right \
+           --set cpu icon="$I_CPU" update_freq=5 script="$PLUGIN_DIR/cpu.sh" \
+           --subscribe cpu system_woke
+
+##### Apple Music con controles: siguiente, track+play/pausa, anterior #####
+sketchybar --add item music_next right \
+           --set music_next icon="$I_NEXT" icon.color=$ACCENT label.drawing=off drawing=off \
+                 background.drawing=off icon.padding_left=4 icon.padding_right=8 \
+                 click_script="pgrep -xq Music && osascript -e 'tell application \"Music\" to next track'"
+sketchybar --add item music right \
+           --set music icon="$I_MUS" icon.color=$ACCENT label.color=$ACCENT \
+                 background.drawing=off drawing=off update_freq=10 \
+                 script="$PLUGIN_DIR/music.sh" \
+                 click_script="pgrep -xq Music && osascript -e 'tell application \"Music\" to playpause'" \
+           --subscribe music system_woke
+sketchybar --add item music_prev right \
+           --set music_prev icon="$I_PREV" icon.color=$ACCENT label.drawing=off drawing=off \
+                 background.drawing=off icon.padding_left=8 icon.padding_right=4 \
+                 click_script="pgrep -xq Music && osascript -e 'tell application \"Music\" to previous track'"
+
+##### Agrupar stats en un bracket-pill #####
+sketchybar --set cpu background.drawing=off \
+           --set memory background.drawing=off \
+           --set volume background.drawing=off \
+           --set battery background.drawing=off
+sketchybar --add bracket stats cpu memory volume battery \
+           --set stats background.color=$PILL background.corner_radius=9 \
+                 background.height=26 background.border_color=0x33ffffff background.border_width=1
+
+##### Aplicar #####
+sketchybar --update
+sketchybar --trigger aerospace_workspace_change \
+  FOCUSED_WORKSPACE="$(aerospace list-workspaces --focused 2>/dev/null)"

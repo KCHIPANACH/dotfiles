@@ -1,0 +1,79 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "1",
+        "type": "model",
+        "color": "cyan"
+      },
+      {
+        "id": "101",
+        "type": "separator"
+      },
+      {
+        "id": "2",
+        "type": "session-cost",
+        "color": "green"
+      }
+    ],
+    [
+      {
+        "id": "3",
+        "type": "session-usage",
+        "color": "cyan",
+        "metadata": {
+          "display": "progress"
+        }
+      },
+      {
+        "id": "103",
+        "type": "separator"
+      },
+      {
+        "id": "4",
+        "type": "reset-timer",
+        "color": "brightBlack"
+      }
+    ],
+    [
+      {
+        "id": "5",
+        "type": "weekly-usage",
+        "color": "blue",
+        "metadata": {
+          "display": "progress"
+        }
+      },
+      {
+        "id": "105",
+        "type": "separator"
+      },
+      {
+        "id": "6",
+        "type": "weekly-reset-timer",
+        "color": "brightBlack"
+      }
+    ]
+  ],
+  "flexMode": "full-minus-40",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "gitCacheTtlSeconds": 5,
+  "minimalistMode": false,
+  "powerline": {
+    "enabled": false,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": [],
+    "autoAlign": false,
+    "continueThemeAcrossLines": false
+  }
+}
