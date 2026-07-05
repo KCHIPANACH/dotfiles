@@ -13,6 +13,7 @@ vscode
 .config/sketchybar
 .config/borders
 .config/ghostty
+.config/nvim
 .tmux.conf
 .config/tmux
 {{ end }}
