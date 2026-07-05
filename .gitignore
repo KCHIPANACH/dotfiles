@@ -1,0 +1,13 @@
+.DS_Store
+*.swp
+*.swo
+# Salvaguarda: nunca versionar posibles secretos
+*.key
+*.pem
+id_ed25519*
+id_rsa*
+*token*
+*secret*
+*credential*
+.env
+.env.*

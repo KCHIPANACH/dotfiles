@@ -1,0 +1,15 @@
+# Archivos del repositorio que NO se aplican al home
+README.md
+LICENSE
+Brewfile
+packages-linux.txt
+bootstrap.sh
+zshrc.local.example
+vscode
+.github
+
+# Solo macOS: sketchybar y borders no van en Linux
+{{ if ne .chezmoi.os "darwin" }}
+.config/sketchybar
+.config/borders
+{{ end }}

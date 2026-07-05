@@ -1,0 +1,46 @@
+# ============================================================
+#  Atajos para caracteres dificiles en teclado Latinoamericano
+# ============================================================
+# Se usa CONTROL como modificador (no Option): Control NO compone caracteres,
+# asi que los keybinds disparan siempre y NO interfieren con Option.
+# Las teclas son LETRAS: ocupan la misma posicion fisica en cualquier layout.
+
+# ~  (tilde)
+keybind = ctrl+plus=text:~
+keybind = ctrl+physical:right_bracket=text:~
+# @  (arroba)                  -> Ctrl + Q
+keybind = ctrl+q=text:@
+# `  (backtick)                -> Ctrl + Shift + G
+keybind = ctrl+shift+g=text:`
+# |  (pipe)                    -> Ctrl + Shift + B
+keybind = ctrl+shift+b=text:|
+# \  (backslash)               -> Ctrl + Shift + N
+keybind = ctrl+shift+n=text:\\
+# {  (llave abre)              -> Ctrl + Shift + J
+keybind = ctrl+shift+j=text:{
+# }  (llave cierra)            -> Ctrl + Shift + K
+keybind = ctrl+shift+k=text:}
+
+{{ if eq .chezmoi.hostname "Mac-mini-de-Kevin-3" -}}
+# ============================================================
+#  Simbolos de Option desde el teclado Corne (solo Mac mini)
+# ============================================================
+# El Corne manda los simbolos de Option con el Option DERECHO (RALT). Con esto
+# el Option derecho pasa a 'alt' y cada combinacion del Corne sale igual en el
+# terminal. El Option izquierdo no se toca.
+macos-option-as-alt = right
+# @   Option(der) + Q
+keybind = alt+q=text:@
+# \   Option(der) + - (minus)
+keybind = alt+minus=text:\\
+# ~   Option(der) + ] (right bracket)
+keybind = alt+physical:right_bracket=text:~
+# ^   Option(der) + ; (semicolon)
+keybind = alt+semicolon=text:^
+{{ end -}}
+
+# ============================================================
+#  Scroll
+# ============================================================
+# precision = trackpad · discrete = rueda del mouse. Bajar = mas suave.
+mouse-scroll-multiplier = precision:0.5,discrete:1

@@ -1,0 +1,12 @@
+# ~/.zshrc.local — ajustes específicos de esta máquina (NO se versiona)
+# Copia este archivo a ~/.zshrc.local y edita las rutas según tu equipo.
+
+# Atajos a tus carpetas de proyectos
+# alias cdp='cd ~/proyectos/personales'
+# alias cdt='cd ~/proyectos/trabajo'
+
+# Herramientas instaladas en rutas no estándar
+# export PATH="/ruta/a/tu/herramienta/bin:$PATH"
+
+# Integraciones de terminal específicas del equipo
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
