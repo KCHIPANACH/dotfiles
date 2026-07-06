@@ -89,8 +89,14 @@ brew "zsh-completions"
 brew "zsh-syntax-highlighting"
 # A window border system for macOS
 brew "felixkratz/formulae/borders"
+# Custom macOS statusbar (barra tipo waybar)
+brew "sketchybar"
+# Tiling window manager estilo i3/Omarchy para macOS
+cask "nikitabobko/tap/aerospace"
 cask "font-hack-nerd-font"
 cask "font-jetbrains-mono-nerd-font"
+# Iconos de apps para SketchyBar
+cask "font-sketchybar-app-font"
 # Set of tools to manage resources and applications hosted on Google Cloud
 cask "gcloud-cli"
 # Free cross-platform office suite, fresh version

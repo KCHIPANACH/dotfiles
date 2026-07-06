@@ -42,10 +42,14 @@ sketchybar --add item mode left \
                  icon.color=0xff1e1e2e label.color=0xff1e1e2e \
                  background.color=0xfff9e2af background.drawing=on
 
-##### Workspaces (con iconos de apps) #####
-for sid in 1 2 3 4; do
+##### Workspaces por monitor: 1-5 en display 1, 6-10 en display 2 #####
+# Si los ves al reves (5 primeros en el monitor derecho), invierte el
+# valor de $disp aqui (1<->2) — el indice de display de SketchyBar puede
+# no coincidir con el numero de monitor de AeroSpace.
+for sid in $(seq 1 10); do
+  if [ "$sid" -le 5 ]; then disp=1; else disp=2; fi
   sketchybar --add item space.$sid left \
-             --set space.$sid icon="$sid" icon.font="Hack Nerd Font:Bold:14.0" \
+             --set space.$sid display=$disp icon="$sid" icon.font="Hack Nerd Font:Bold:14.0" \
                    label.font="sketchybar-app-font:Regular:16.0" \
                    background.drawing=off \
                    script="$PLUGIN_DIR/aerospace.sh" \
