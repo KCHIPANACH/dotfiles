@@ -1,0 +1,146 @@
+# ~/.config/aerospace/aerospace.toml — estilo Omarchy (Hyprland-like) para macOS
+# ------------------------------------------------------------------
+# Modificador base = Ctrl+Alt  (equivale al SUPER de Hyprland/Omarchy).
+# Se usa ctrl-alt en vez de Cmd porque Cmd choca con atajos nativos de
+# macOS, y no interfiere con el teclado Corne / layout LATAM.
+# Layout por defecto: TILES (mosaico automatico), el corazon de Omarchy.
+# ------------------------------------------------------------------
+
+start-at-login = true
+
+# Borde de color en la ventana enfocada (JankyBorders), arranca con AeroSpace.
+# Color mauve de Catppuccin para el toque Omarchy.
+after-startup-command = [
+  'exec-and-forget /opt/homebrew/bin/borders active_color=0xffcba6f7 inactive_color=0x00000000 width=6.0 style=round'
+]
+
+# Avisar a SketchyBar al cambiar de workspace (resalta el activo en la barra).
+exec-on-workspace-change = ['/bin/bash', '-c',
+  '/opt/homebrew/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
+# --- Tiling automatico (asi se siente Omarchy: todo se acomoda solo) ---
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'   # divide segun la forma del monitor
+
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# --- Workspaces anclados a cada monitor ---
+# Monitor 1 (HUAWEI AD80HW, izq) = workspaces 1-5
+# Monitor 2 (CV271FGTL, der)     = workspaces 6-10
+# Coincide con las mitades del Corne: mano izq (1-5) / mano der (6-10).
+[workspace-to-monitor-force-assignment]
+1 = 'HUAWEI AD80HW'
+2 = 'HUAWEI AD80HW'
+3 = 'HUAWEI AD80HW'
+4 = 'HUAWEI AD80HW'
+5 = 'HUAWEI AD80HW'
+6 = 'CV271FGTL'
+7 = 'CV271FGTL'
+8 = 'CV271FGTL'
+9 = 'CV271FGTL'
+10 = 'CV271FGTL'
+
+# --- La ayuda visual (capa Ventanas) flota como panel, no se tilea ---
+[[on-window-detected]]
+if.window-title-regex-substring = 'Capa Ventanas'
+run = ['layout floating']
+
+# --- Gaps / espaciado tipo Hyprland ---
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left   = 8
+outer.right  = 8
+outer.top    = 42   # deja sitio para la barra de SketchyBar (36px) arriba
+outer.bottom = 8
+
+[mode.main.binding]
+# ================= BASE = Ctrl+Alt (SUPER) =================
+
+# --- Apps (firma de Omarchy) ---
+ctrl-alt-enter   = 'exec-and-forget open -na Ghostty'          # terminal nueva
+ctrl-alt-c       = 'exec-and-forget /Users/kchipanach/.config/aerospace/scripts/chrome-new.sh'   # Chrome: ventana nueva
+ctrl-alt-a       = 'exec-and-forget open /Applications'        # listado de todas las apps (Finder)
+ctrl-alt-g       = 'reload-config'                             # recargar config (tecla G)
+ctrl-alt-slash   = 'exec-and-forget /Users/kchipanach/.config/aerospace/scripts/cheatsheet.sh'  # ayuda visual capa 6
+ctrl-alt-w       = 'fullscreen'                         # Super+W: MAXIMIZAR (toggle, barra visible, vuelve al tamano previo)
+ctrl-alt-q       = 'close'                              # cerrar ventana (antes en W, ahora en su propia tecla)
+ctrl-alt-shift-w = 'close-all-windows-but-current'      # cerrar las demas del workspace
+
+# --- Layouts ---
+ctrl-alt-t = 'layout tiles horizontal vertical'         # mosaico (default)
+ctrl-alt-s = 'layout accordion horizontal vertical'     # apilar (stack)
+ctrl-alt-v = 'layout floating tiling'                   # flotar / anclar (Super+V)
+ctrl-alt-f = 'fullscreen --no-outer-gaps'               # Super+F: pantalla completa REAL (borde a borde, tapa la barra)
+
+# --- Foco entre ventanas (hjkl, da la vuelta dentro del workspace) ---
+ctrl-alt-h = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace left'
+ctrl-alt-j = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace down'
+ctrl-alt-k = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace up'
+ctrl-alt-l = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace right'
+
+# --- Mover la ventana enfocada ---
+ctrl-alt-shift-h = 'move left'
+ctrl-alt-shift-j = 'move down'
+ctrl-alt-shift-k = 'move up'
+ctrl-alt-shift-l = 'move right'
+
+# --- Unir con la ventana vecina (para segmentar manualmente) ---
+ctrl-alt-shift-left  = 'join-with left'
+ctrl-alt-shift-right = 'join-with right'
+ctrl-alt-shift-up    = 'join-with up'
+ctrl-alt-shift-down  = 'join-with down'
+
+# --- Monitores (con 2 pantallas, "next" alterna entre las dos) ---
+ctrl-alt-comma        = 'focus-monitor --wrap-around next'                                # ir a la OTRA pantalla
+ctrl-alt-shift-comma  = 'move-node-to-monitor --wrap-around next --focus-follows-window'  # MANDAR la ventana a la otra pantalla
+# Direccionales (utiles si algun dia hay 3+ monitores)
+ctrl-alt-period       = 'focus-monitor --wrap-around prev'
+ctrl-alt-shift-period = 'move-node-to-monitor --wrap-around prev --focus-follows-window'
+
+# --- Workspaces 1-9 (Super+n) ---
+ctrl-alt-1 = 'workspace 1'
+ctrl-alt-2 = 'workspace 2'
+ctrl-alt-3 = 'workspace 3'
+ctrl-alt-4 = 'workspace 4'
+ctrl-alt-5 = 'workspace 5'
+ctrl-alt-6 = 'workspace 6'
+ctrl-alt-7 = 'workspace 7'
+ctrl-alt-8 = 'workspace 8'
+ctrl-alt-9 = 'workspace 9'
+ctrl-alt-0 = 'workspace 10'
+
+# --- Mandar la ventana a un workspace (Super+Shift+n) ---
+ctrl-alt-shift-1 = 'move-node-to-workspace 1'
+ctrl-alt-shift-2 = 'move-node-to-workspace 2'
+ctrl-alt-shift-3 = 'move-node-to-workspace 3'
+ctrl-alt-shift-4 = 'move-node-to-workspace 4'
+ctrl-alt-shift-5 = 'move-node-to-workspace 5'
+ctrl-alt-shift-6 = 'move-node-to-workspace 6'
+ctrl-alt-shift-7 = 'move-node-to-workspace 7'
+ctrl-alt-shift-8 = 'move-node-to-workspace 8'
+ctrl-alt-shift-9 = 'move-node-to-workspace 9'
+ctrl-alt-tab     = 'workspace-back-and-forth'
+
+# --- Utilidades ---
+ctrl-alt-r = ['mode resize', 'exec-and-forget /opt/homebrew/bin/sketchybar --set mode drawing=on']
+ctrl-alt-shift-0         = 'balance-sizes'              # igualar tamanos
+ctrl-alt-shift-semicolon = 'flatten-workspace-tree'    # reset del layout
+ctrl-alt-shift-c         = 'reload-config'             # recargar esta config
+
+# --- MODO REDIMENSIONAR (se entra con ctrl-alt-r) ---
+# h/l = ancho, j/k = alto. Esc o Enter para volver al modo normal.
+[mode.resize.binding]
+h = 'resize width -50'
+l = 'resize width +50'
+j = 'resize height +50'
+k = 'resize height -50'
+shift-h = 'resize width -150'
+shift-l = 'resize width +150'
+shift-j = 'resize height +150'
+shift-k = 'resize height -150'
+enter = ['mode main', 'exec-and-forget /opt/homebrew/bin/sketchybar --set mode drawing=off']
+esc   = ['mode main', 'exec-and-forget /opt/homebrew/bin/sketchybar --set mode drawing=off']
+q     = ['mode main', 'exec-and-forget /opt/homebrew/bin/sketchybar --set mode drawing=off']

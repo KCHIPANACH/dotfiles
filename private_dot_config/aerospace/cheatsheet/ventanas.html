@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Capa Ventanas — Ayuda</title>
+<style>
+  :root{
+    --base:#1e1e2e; --mantle:#181825; --surface:#313244; --surface2:#45475a;
+    --text:#cdd6f4; --sub:#a6adc8; --overlay:#6c7086;
+    --mauve:#cba6f7; --blue:#89b4fa; --green:#a6e3a1; --peach:#fab387;
+    --red:#f38ba8; --yellow:#f9e2af; --rose:#f5e0dc; --teal:#94e2d5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--base); color:var(--text);
+    font:14px/1.4 -apple-system,"SF Pro Text",system-ui,sans-serif;
+    padding:18px 20px 24px; overflow-x:hidden;
+  }
+  header{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+  h1{font-size:18px;margin:0;font-weight:700}
+  h1 .mauve{color:var(--mauve)}
+  .hint{color:var(--sub);font-size:12px}
+  .hint kbd{background:var(--surface);border-radius:5px;padding:1px 6px;font-family:inherit;color:var(--text)}
+  #q{
+    width:100%;padding:11px 14px;margin-bottom:16px;
+    background:var(--mantle);border:1px solid var(--surface2);border-radius:10px;
+    color:var(--text);font-size:15px;outline:none;
+  }
+  #q:focus{border-color:var(--mauve)}
+  /* Teclado */
+  .kb{display:flex;gap:34px;justify-content:center;margin:4px 0 20px;flex-wrap:wrap}
+  .half{display:grid;grid-template-columns:repeat(6,54px);gap:6px}
+  .thumbs{display:flex;gap:6px;margin-top:6px;justify-content:center}
+  .key{
+    height:46px;border-radius:8px;background:var(--surface);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:3px;position:relative;transition:opacity .12s,transform .12s;
+    border:1px solid transparent;
+  }
+  .key .cap{font-size:10px;color:var(--overlay);position:absolute;top:3px;left:5px}
+  .key .act{font-size:10.5px;text-align:center;line-height:1.15;font-weight:600}
+  .key.blank{background:transparent}
+  .key.dim{opacity:.18}
+  .key.hit{border-color:var(--mauve);transform:translateY(-2px)}
+  .th{width:56px}
+  .cat-workspace .act{color:var(--blue)}
+  .cat-focus .act{color:var(--green)}
+  .cat-move .act{color:var(--peach)}
+  .cat-app .act{color:var(--rose)}
+  .cat-layout .act{color:var(--yellow)}
+  .cat-monitor .act{color:var(--teal)}
+  .cat-util .act{color:var(--mauve)}
+  .key.activate{background:var(--surface2);border-color:var(--mauve)}
+  .key.activate .act{color:var(--mauve)}
+  /* Lista */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--sub)}
+  .legend b{font-weight:600}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .groups{columns:2;column-gap:26px}
+  @media(max-width:640px){.groups{columns:1}}
+  .grp{break-inside:avoid;margin-bottom:16px}
+  .grp h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin:0 0 7px}
+  .row{display:flex;align-items:center;gap:9px;padding:4px 0}
+  .row.dim{display:none}
+  .row kbd{
+    min-width:26px;text-align:center;background:var(--surface);border-radius:6px;
+    padding:3px 7px;font-family:inherit;font-size:12px;font-weight:600;
+    border-bottom:2px solid var(--surface2);
+  }
+  .row .desc{color:var(--text);font-size:13px}
+  .empty{color:var(--overlay);text-align:center;padding:20px;display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>⌨ Capa <span class="mauve">Ventanas</span></h1>
+  <span class="hint">Mantén el pulgar <kbd>medio-izq</kbd> para activarla · <kbd>Esc</kbd> cierra esta ayuda</span>
+</header>
+
+<input id="q" placeholder="Buscar acción o tecla…  (ej: monitor, foco, chrome, 3)" autofocus>
+
+<div class="kb" id="kb"></div>
+
+<div class="legend">
+  <span><span class="dot" style="background:var(--blue)"></span><b>Workspace</b></span>
+  <span><span class="dot" style="background:var(--green)"></span><b>Foco</b></span>
+  <span><span class="dot" style="background:var(--peach)"></span><b>Mover</b></span>
+  <span><span class="dot" style="background:var(--yellow)"></span><b>Layout</b></span>
+  <span><span class="dot" style="background:var(--teal)"></span><b>Monitor</b></span>
+  <span><span class="dot" style="background:var(--rose)"></span><b>Apps</b></span>
+  <span><span class="dot" style="background:var(--mauve)"></span><b>Utilidad</b></span>
+</div>
+
+<div class="groups" id="list"></div>
+<div class="empty" id="empty">Sin resultados</div>
+
+<script>
+// key = etiqueta física, act = acción corta, cat, desc = descripción completa
+const B = [
+  // Workspaces izquierdos (monitor izq)
+  {half:'L',r:0,c:1,key:'1',act:'WS 1',cat:'workspace',desc:'Ir a workspace 1 (monitor izq)'},
+  {half:'L',r:0,c:2,key:'2',act:'WS 2',cat:'workspace',desc:'Ir a workspace 2 (monitor izq)'},
+  {half:'L',r:0,c:3,key:'3',act:'WS 3',cat:'workspace',desc:'Ir a workspace 3 (monitor izq)'},
+  {half:'L',r:0,c:4,key:'4',act:'WS 4',cat:'workspace',desc:'Ir a workspace 4 (monitor izq)'},
+  {half:'L',r:0,c:5,key:'5',act:'WS 5',cat:'workspace',desc:'Ir a workspace 5 (monitor izq)'},
+  // Comandos izquierdos
+  {half:'L',r:1,c:1,key:'A',act:'Apps',cat:'app',desc:'Abrir listado de todas las apps (Finder)'},
+  {half:'L',r:1,c:2,key:'W',act:'Cerrar',cat:'util',desc:'Cerrar la ventana enfocada'},
+  {half:'L',r:1,c:3,key:'F',act:'Full',cat:'layout',desc:'Pantalla completa'},
+  {half:'L',r:1,c:4,key:'V',act:'Flotar',cat:'layout',desc:'Flotar / anclar la ventana'},
+  {half:'L',r:1,c:5,key:'G',act:'Reload',cat:'util',desc:'Recargar la configuración de AeroSpace'},
+  {half:'L',r:2,c:1,key:'Z',act:'Mosaico',cat:'layout',desc:'Layout mosaico (tiles)'},
+  {half:'L',r:2,c:2,key:'X',act:'Apilar',cat:'layout',desc:'Layout apilar (accordion)'},
+  {half:'L',r:2,c:3,key:'C',act:'⇄ Pantalla',cat:'monitor',desc:'Ir a la otra pantalla'},
+  {half:'L',r:2,c:4,key:'V',act:'→ Ventana a otra pant.',cat:'monitor',desc:'Mandar la ventana a la otra pantalla'},
+  {half:'L',r:2,c:5,key:'B',act:'Igualar',cat:'util',desc:'Igualar tamaños de las ventanas'},
+  // Workspaces derechos (monitor der)
+  {half:'R',r:0,c:0,key:'6',act:'WS 6',cat:'workspace',desc:'Ir a workspace 6 (monitor der)'},
+  {half:'R',r:0,c:1,key:'7',act:'WS 7',cat:'workspace',desc:'Ir a workspace 7 (monitor der)'},
+  {half:'R',r:0,c:2,key:'8',act:'WS 8',cat:'workspace',desc:'Ir a workspace 8 (monitor der)'},
+  {half:'R',r:0,c:3,key:'9',act:'WS 9',cat:'workspace',desc:'Ir a workspace 9 (monitor der)'},
+  {half:'R',r:0,c:4,key:'0',act:'WS 10',cat:'workspace',desc:'Ir a workspace 10 (monitor der)'},
+  // Foco
+  {half:'R',r:1,c:0,key:'H',act:'Foco ←',cat:'focus',desc:'Mover el foco a la izquierda'},
+  {half:'R',r:1,c:1,key:'J',act:'Foco ↓',cat:'focus',desc:'Mover el foco abajo'},
+  {half:'R',r:1,c:2,key:'K',act:'Foco ↑',cat:'focus',desc:'Mover el foco arriba'},
+  {half:'R',r:1,c:3,key:'L',act:'Foco →',cat:'focus',desc:'Mover el foco a la derecha'},
+  // Mover ventana
+  {half:'R',r:2,c:0,key:'N',act:'Mover ←',cat:'move',desc:'Mover la ventana a la izquierda'},
+  {half:'R',r:2,c:1,key:'M',act:'Mover ↓',cat:'move',desc:'Mover la ventana abajo'},
+  {half:'R',r:2,c:2,key:',',act:'Mover ↑',cat:'move',desc:'Mover la ventana arriba'},
+  {half:'R',r:2,c:3,key:'.',act:'Mover →',cat:'move',desc:'Mover la ventana a la derecha'},
+  {half:'R',r:2,c:5,key:'Esc',act:'Salir',cat:'util',desc:'Salir / cancelar'},
+];
+// Pulgares
+const TH_L = [
+  {act:'—',blank:true},
+  {act:'ACTIVA',activate:true,desc:'Mantener = capa Ventanas'},
+  {act:'—',blank:true},
+];
+const TH_R = [
+  {key:'↵',act:'Terminal',cat:'app',desc:'Abrir terminal nueva (Ghostty)'},
+  {key:'C',act:'Chrome',cat:'app',desc:'Abrir ventana nueva de Chrome'},
+  {act:'—',blank:true},
+];
+
+function keyEl(b){
+  const d=document.createElement('div');
+  if(b.blank){d.className='key blank';return d;}
+  d.className='key cat-'+(b.cat||'util')+(b.activate?' activate':'');
+  d.dataset.txt=((b.key||'')+' '+(b.act||'')+' '+(b.desc||'')).toLowerCase();
+  d.innerHTML=(b.key?`<span class="cap">${b.key}</span>`:'')+`<span class="act">${b.act}</span>`;
+  return d;
+}
+function buildHalf(half){
+  const el=document.createElement('div');el.className='half';
+  const grid={};B.filter(b=>b.half===half).forEach(b=>grid[b.r+'-'+b.c]=b);
+  for(let r=0;r<3;r++)for(let c=0;c<6;c++){
+    const b=grid[r+'-'+c];
+    el.appendChild(b?keyEl(b):Object.assign(document.createElement('div'),{className:'key blank'}));
+  }
+  return el;
+}
+const kb=document.getElementById('kb');
+const wrapL=document.createElement('div');wrapL.appendChild(buildHalf('L'));
+const thl=document.createElement('div');thl.className='thumbs';TH_L.forEach(b=>{const k=keyEl(b);k.classList.add('th');thl.appendChild(k)});wrapL.appendChild(thl);
+const wrapR=document.createElement('div');wrapR.appendChild(buildHalf('R'));
+const thr=document.createElement('div');thr.className='thumbs';TH_R.forEach(b=>{const k=keyEl(b);k.classList.add('th');thr.appendChild(k)});wrapR.appendChild(thr);
+kb.appendChild(wrapL);kb.appendChild(wrapR);
+
+// Lista agrupada
+const GROUPS=[
+  ['focus','Foco'],['move','Mover ventana'],['workspace','Workspaces'],
+  ['layout','Layout'],['monitor','Monitores'],['app','Apps'],['util','Utilidades'],
+];
+const ALL=[...B,...TH_R.filter(b=>!b.blank)];
+const list=document.getElementById('list');
+GROUPS.forEach(([cat,title])=>{
+  const items=ALL.filter(b=>b.cat===cat);
+  if(!items.length)return;
+  const g=document.createElement('div');g.className='grp';
+  g.innerHTML=`<h2>${title}</h2>`;
+  items.forEach(b=>{
+    const row=document.createElement('div');row.className='row cat-'+cat;
+    row.dataset.txt=((b.key||'')+' '+(b.act||'')+' '+(b.desc||'')).toLowerCase();
+    row.innerHTML=`<kbd>${b.key||''}</kbd><span class="desc">${b.desc||b.act}</span>`;
+    g.appendChild(row);
+  });
+  list.appendChild(g);
+});
+
+// Búsqueda
+const q=document.getElementById('q'),empty=document.getElementById('empty');
+const keys=[...document.querySelectorAll('.key')].filter(k=>k.dataset.txt);
+const rows=[...document.querySelectorAll('.row')];
+q.addEventListener('input',()=>{
+  const t=q.value.trim().toLowerCase();let n=0;
+  keys.forEach(k=>{const hit=!t||k.dataset.txt.includes(t);k.classList.toggle('dim',!!t&&!hit);k.classList.toggle('hit',!!t&&hit)});
+  rows.forEach(r=>{const hit=!t||r.dataset.txt.includes(t);r.classList.toggle('dim',!hit);if(hit)n++});
+  empty.style.display=n?'none':'block';
+});
+// Esc cierra
+document.addEventListener('keydown',e=>{if(e.key==='Escape')window.close()});
+q.focus();
+</script>
+</body>
+</html>
