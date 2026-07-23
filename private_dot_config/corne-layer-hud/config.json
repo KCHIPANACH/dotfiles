@@ -1,0 +1,18 @@
+{
+  "_comentario": "HUD que muestra la capa activa del Corne en el monitor. Fuente del binario: repo teclado-corne-boost/macos-layer-hud (correr su install.sh). Cambiar aqui NO requiere reflashear el teclado; los nombres del OLED si (viven en el firmware).",
+  "display": "main",
+  "showBase": true,
+  "holdSeconds": 0.8,
+  "verticalPosition": 0.5,
+  "scale": 1.0,
+  "layers": {
+    "0": { "name": "BASE",     "subtitle": "QWERTY",         "color": "#64748B" },
+    "1": { "name": "NAV",      "subtitle": "Navegacion",     "color": "#3B82F6" },
+    "2": { "name": "SYM",      "subtitle": "Simbolos",       "color": "#A855F7" },
+    "3": { "name": "NUM",      "subtitle": "Numpad y media", "color": "#22C55E" },
+    "4": { "name": "ADJUST",   "subtitle": "RGB y F1-F9",    "color": "#F97316" },
+    "5": { "name": "FN",       "subtitle": "F1-F12",         "color": "#EC4899" },
+    "6": { "name": "VENTANAS", "subtitle": "AeroSpace",      "color": "#14B8A6" },
+    "7": { "name": "CAPA 7",   "subtitle": "sin usar",       "color": "#EAB308" }
+  }
+}

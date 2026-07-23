@@ -15,6 +15,7 @@ Una sola base compartida entre todas las máquinas, con ajustes por sistema oper
 | Editor | Neovim (`nvim/`) y VS Code (`vscode/`) |
 | Git | `dot_gitconfig`, `git/ignore` |
 | macOS | sketchybar y borders (solo en macOS) |
+| Teclado | HUD de capas del Corne (`corne-layer-hud/config.json`, solo en macOS) |
 | Paquetes | `Brewfile` (macOS), `packages-linux.txt` (Linux) |
 
 ## Requisitos
@@ -52,6 +53,8 @@ cp "$(chezmoi source-path)/zshrc.local.example" ~/.zshrc.local
 ## Teclado Corne
 
 Los atajos de la capa de símbolos del teclado Corne en Ghostty se aplican **solo** en la Mac mini, mediante una plantilla por nombre de equipo. Las demás máquinas usan su teclado propio.
+
+El **HUD de capas** muestra en el monitor qué capa del Corne está activa. Aquí solo vive su config (`corne-layer-hud/config.json`); el binario y el firmware se construyen desde el repo `teclado-corne-boost` (carpeta `macos-layer-hud`, correr su `install.sh`). Cambiar la config **no** requiere reflashear el teclado.
 
 ## Qué NO se incluye
 

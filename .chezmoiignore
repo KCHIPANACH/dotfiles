@@ -15,6 +15,7 @@ vscode
 .config/borders
 .config/ghostty
 .config/nvim
+.config/corne-layer-hud
 .tmux.conf
 .config/tmux
 {{ end }}
